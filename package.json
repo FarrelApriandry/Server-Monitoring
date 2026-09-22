@@ -1,0 +1,35 @@
+{
+  "name": "monitor-device",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "dev:bun": "bun --bun astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "bun dist/server/entry.mjs",
+    "test": "bun test",
+    "test:e2e": "bun run tests/run-e2e.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@astrojs/node": "^11.1.6",
+    "@astrojs/react": "^6.0.6",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.3",
+    "lucide-react": "^1.47.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "systeminformation": "^5.33.13",
+    "tailwindcss": "^4.3.3"
+  }
+}

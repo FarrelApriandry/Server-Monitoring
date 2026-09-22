@@ -1,0 +1,105 @@
+---
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEXUS — Authentication Required</title>
+    <link rel="icon" type="image/png" href="/Nexus_Icon.png" />
+  </head>
+  <body class="bg-primary text-ink min-h-screen antialiased font-sans">
+    <main class="min-h-screen flex items-center justify-center px-4">
+      <div class="hud-panel w-full max-w-sm p-6 hud-corner-brackets font-mono space-y-5">
+        <div class="flex items-center gap-3 justify-center">
+          <div class="w-9 h-9 rounded bg-accent/10 border border-accent/40 flex items-center justify-center text-accent">
+            <span class="text-base">◈</span>
+          </div>
+          <div>
+            <h1 class="text-base font-bold tracking-wider text-ink">NEXUS</h1>
+            <p class="text-[10px] text-muted tracking-widest uppercase">SYSTEM MONITOR · SECURE ACCESS</p>
+          </div>
+        </div>
+
+        <div class="text-xs text-soft">
+          Authentication is required to access telemetry data.
+        </div>
+
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label for="password" class="block text-[10px] uppercase tracking-widest text-muted mb-1">
+              ACCESS PASSWORD
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              autofocus
+              required
+              class="w-full bg-secondary border border-default focus:border-accent rounded text-sm text-ink pl-3 pr-3 py-2 outline-none placeholder-muted"
+              placeholder="••••••••••"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-2 rounded bg-accent/10 border border-accent/40 text-accent font-bold text-xs uppercase tracking-wider hover:bg-accent/20 transition-colors"
+          >
+            Unlock Telemetry
+          </button>
+        </form>
+
+        <p id="error" class="hidden text-[11px] text-danger font-mono"></p>
+        <p class="text-[9px] text-muted text-center">[ NEXUS SECURE GATEWAY · v2 ]</p>
+      </div>
+    </main>
+
+    <script is:inline>
+      const form = document.getElementById('login-form');
+      const errorBox = document.getElementById('error');
+      const passwordInput = document.getElementById('password');
+
+      const showError = (message) => {
+        errorBox.textContent = message;
+        errorBox.classList.remove('hidden');
+      };
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        errorBox.classList.add('hidden');
+        const submitBtn = form.querySelector('button');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Verifying...';
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: passwordInput.value }),
+          });
+          let data = {};
+          try { data = await res.json(); } catch {}
+          if (res.ok && data.ok) {
+            window.location.href = data.redirect || '/';
+            return;
+          }
+          if (res.status === 429) {
+            showError('Too many attempts. Retry after ' + (data.retryAfter || '60') + 's.');
+          } else if (res.status === 401) {
+            passwordInput.select();
+            showError(data.message || 'Invalid password.');
+          } else {
+            showError(data.message || 'Authentication failed.');
+          }
+        } catch {
+          showError('Cannot reach the telemetry server.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Unlock Telemetry';
+        }
+      });
+    </script>
+  </body>
+</html>

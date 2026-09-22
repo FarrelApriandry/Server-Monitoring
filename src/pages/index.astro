@@ -1,0 +1,25 @@
+---
+import Dashboard from '../components/Dashboard';
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="NEXUS — realtime server & device telemetry dashboard" />
+    <meta name="theme-color" content="#080B10" />
+    <title>NEXUS — System Monitor & Telemetry</title>
+    <link rel="icon" type="image/png" href="/Nexus_Icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-primary text-ink min-h-screen antialiased selection:bg-accent/20 selection:text-accent">
+    <Dashboard client:load />
+  </body>
+</html>
